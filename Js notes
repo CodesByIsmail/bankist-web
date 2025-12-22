@@ -1,0 +1,1 @@
+const allButtons = document.getElementsByTagName('button'); //retutn a htmlcollection and it is a life collection, and if a change happens to the dom, it changes in the collection i.e it automatically updates unlike the node list - 
