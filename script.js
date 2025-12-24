@@ -1,7 +1,5 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
 
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
@@ -10,6 +8,12 @@ const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+
+const nav = document.querySelector('nav')
+
+
+///////////////////////////////////////
+// Modal window
 
 const openModal = function (e) {
   e.preventDefault();
@@ -39,17 +43,17 @@ document.addEventListener('keydown', function (e) {
 //Scrolling
 btnScrollTo.addEventListener('click', function (e) {
   const slcoords = section1.getBoundingClientRect();
-  console.log(slcoords);
+  // console.log(slcoords);
 
-  console.log(e.target.getBoundingClientRect());
+  // console.log(e.target.getBoundingClientRect());
 
-  console.log('current scroll X/Y', window.pageXOffset, pageYOffset); // y: how far you have scroll from the top; x: how far you scroll from the left
+  // console.log('current scroll X/Y', window.pageXOffset, pageYOffset); // y: how far you have scroll from the top; x: how far you scroll from the left
 
-  console.log(
-    'height/width viewport',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
+  // console.log(
+  //   'height/width viewport',
+  //   document.documentElement.clientHeight,
+  //   document.documentElement.clientWidth
+  // );
 
   //Scrolling
 
@@ -70,7 +74,8 @@ btnScrollTo.addEventListener('click', function (e) {
 });
 
 //////////////////////////////////
-//Page Navigation
+////////////////////////////
+  //PAGE NAVIGATION
 
 // document.querySelectorAll('.nav__link').forEach(el => {
 //   el.addEventListener('click', function (e) {
@@ -94,8 +99,134 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   }
 });
 
+
+// ////////////////////////////////
+// ////////////////////////////////
+//TABBED Components 
+
+const tab = document.querySelectorAll('.operations__tab')
+const tabsContainer = document.querySelector('.operations__tab-container')
+const tabsContent = document.querySelectorAll('.operations__content')
+
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab')
+  console.log(clicked)
+  
+   if(!clicked) return
+  tab.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+  
+  
+  clicked.classList.add('operations__tab--active');
+  
+  
+ document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active')
+})
+
 // ////////////////////////////////
 // ///////////////////////////////
+
+const handlerOver = function (e) {
+  const link = e.target
+  const siblings = link.closest('.nav').querySelectorAll('.nav__link')
+  const logo = link.closest('.nav').querySelectorAll('img')
+  
+  
+  siblings.forEach(el => {
+    if (el !== link) {
+el.style.opacity = this;
+    }
+  })
+  
+logo.style.opacity = this;
+}
+
+// To add function to event handler
+
+nav.addEventListener('mouseover', handlerOver.bind('0.5'))
+nav.addEventListener('mouseleave', handlerOver.bind('1'))
+
+
+
+//Sticky Navigation 
+
+// const initialCoords = section1.getBoundingClientRect()
+
+// window.addEventListener('scroll', function () {
+
+
+// if(window.scrollY > initialCoords.top )
+// nav.classList.add('sticky')
+// else nav.classList.remove('sticky')
+// })
+
+// const obsFuntion = function (entries, observer) {
+//   entries.forEach(entry => {
+// console.log(entry)
+//   })
+// console.log(observer)
+// } // it takes entries as the first argument, and of the threshold is an array of values, then we can loop over the entries.
+
+
+
+// const obsOption = {
+//   root: null,
+//   threshold: [0, 0.2],
+// }
+
+
+// const observer = new IntersectionObserver(obsFuntion, obsOption) // It takes a callback function and options objects which contain null(the reference to which we want to observe) qnd threshold (the percentage of observance). in tbe observer call back function, we give to argument, on is referencimg to the threshold in the options object and other is referring to the observer function itself.
+
+// observer.observe(section1) // i.e use th observer to observe thr section1
+
+const header = document.querySelector('.header')
+const navHeight = nav.getBoundingClientRect().height
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  
+  if (!entry.isIntersecting) {
+    nav.classList.add('sticky')
+  } else {
+    nav.classList.remove('sticky')
+  }
+}
+
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px` //it gives margin to the header, the negative gives ot margin bottom so it actually move up and the threshold will start at that new place,
+})
+
+headerObserver.observe(header)
+
+/////////////////////////////////
+//Revwal Sections 
+const allSections = document.querySelectorAll('.section')
+
+
+const revealSection = function (entries, observer) {
+const [entry] = entries
+if (!entry.isIntersecting) return // Guard clause
+
+entry.target.classList.remove('section--hidden')
+observer.unobserve(entry.target)
+}
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold:0.2
+})
+
+allSections.forEach( function (section) {
+  section.classList.add('section--hidden')
+  sectionObserver.observe(section)
+})
+
+//////////////////////////////////
+/////////////////////////////////
 
 // console.log(document.documentElement);
 // console.log(document.head);
@@ -232,28 +363,28 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 //   console.log('NAV', e.target, e.currentTarget);
 // }); // when we give the eventhandler a third parameter(true or false), we are saying it shoukd respong to event handler at capturing stage. so it is the one that runs first while the other waits for bubbling stage for execution
 
-const h1 = document.querySelector('h1');
+// const h1 = document.querySelector('h1');
 
-//Going downwards
-console.log(h1.querySelectorAll('.highlight'));
-console.log(h1.childNodes);
-console.log(h1.children);
-h1.firstElementChild.style.color = 'white';
-h1.lastElementChild.style.color = 'orangered';
+// //Going downwards
+// console.log(h1.querySelectorAll('.highlight'));
+// console.log(h1.childNodes);
+// console.log(h1.children);
+// h1.firstElementChild.style.color = 'white';
+// h1.lastElementChild.style.color = 'orangered';
 
-//Going upwards
-console.log(h1.parentNode);
-console.log(h1.parentElement);
+// //Going upwards
+// console.log(h1.parentNode);
+// console.log(h1.parentElement);
 
-h1.closest('.header').style.background = 'var( --gradient-secondary)';
-h1.closest('h1').style.background = 'var( --gradient-primary)';
+// h1.closest('.header').style.background = 'var( --gradient-secondary)';
+// h1.closest('h1').style.background = 'var( --gradient-primary)';
 
 
-//Going Sideways: siblings 
-console.log(h1.previousElementSibling)
-console.log(h1.nextElementSibling)
+// //Going Sideways: siblings 
+// console.log(h1.previousElementSibling)
+// console.log(h1.nextElementSibling)
 
-console.log(h1.parentElement.children);
-[...h1.parentElement.children].forEach(function (el) {
-  if (el !== h1) el.style.transform = 'scale(0.5)'
-})
+// console.log(h1.parentElement.children);
+// [...h1.parentElement.children].forEach(function (el) {
+//   if (el !== h1) el.style.transform = 'scale(0.5)'
+// })
