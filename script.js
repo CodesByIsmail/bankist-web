@@ -225,6 +225,32 @@ allSections.forEach( function (section) {
   sectionObserver.observe(section)
 })
 
+
+////////////////////////////////////
+///LAZY LOADING
+
+const imgTargets = document.querySelectorAll('img[data-src]')
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries
+  
+  entry.target.src = entry.target.dataset.src
+  
+  entry.target.addEventListener('load', () => {
+    entry.target.classList.remove('lazy-img')
+  })
+}
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px', //this is telling the observe to do it 200px before getting to the image, so users won't detect 
+})
+
+imgTargets.forEach(img => imgObserver.observe(img))
+
+
+
 //////////////////////////////////
 /////////////////////////////////
 
