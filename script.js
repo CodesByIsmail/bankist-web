@@ -125,10 +125,13 @@ tabsContainer.addEventListener('click', function (e) {
 
 const handlerOver = function (e) {
   const link = e.target;
+  console.log(link);
   const siblings = link.closest('.nav').querySelectorAll('.nav__link');
   const logo = link.closest('.nav').querySelectorAll('img');
 
+
   siblings.forEach(el => {
+    console.log(el);
     if (el !== link) {
       el.style.opacity = this;
     }
